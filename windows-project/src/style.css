@@ -1,14 +1,51 @@
 @font-face {
   font-family: 'Geneva';
-  src: url('/fonts/Geneva.ttf') format('truetype');
+  src:
+    local('Geneva'),
+    url('/fonts/Geneva.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
 }
 
+/* Geneva Bold */
+@font-face {
+  font-family: 'Geneva';
+  src:
+    local('Geneva Bold'),
+    url('/fonts/Geneva Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Geneva Italic weights (optional, if used) */
+@font-face {
+  font-family: 'Geneva';
+  src:
+    local('Geneva Normal Italic'),
+    url('/fonts/Geneva/genevanormal_italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Geneva';
+  src:
+    local('Geneva Bold Italic'),
+    url('/fonts/Geneva/genevabold_italic.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* Use a single family name 'Geneva' for all weights; select bold via font-weight */
+
 @font-face {
   font-family: 'Charcoal';
-  src: url('/fonts/Charcoal.ttf') format('truetype');
+  src:
+    local('Charcoal'),
+    url('/fonts/Charcoal.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -21,7 +58,7 @@
 }
 
 :root {
-  font-family: 'Geneva', Arial, serif;
+  font-family: 'Geneva', 'Charcoal', Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -48,7 +85,7 @@ body {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  font-family: 'Geneva', Arial, serif;
+  font-family: 'Geneva', 'Charcoal', Arial, sans-serif;
   /* font-family: -apple-system, BlinkMacSystemFont, 'San Francisco', sans-serif; */
   display: flex;
   place-items: center;
@@ -93,7 +130,7 @@ button:focus-visible {
   text-align: center;
 }
 
-@media (prefers-color-scheme: light) {
+/* @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
     background-color: #ffffff;
@@ -104,4 +141,4 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
-}
+} */

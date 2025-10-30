@@ -24,7 +24,7 @@
   border: 2px solid #999;
   background: #efefef;
   box-shadow: inset -1px -1px 0 #000, inset 1px 1px 0 #fff;
-  font-family: 'Geneva', sans-serif;
+  font-family: 'Geneva Bold', sans-serif;
   color: black;
 }
 
@@ -38,7 +38,7 @@
 }
 
 .header-title {
-  font-family: 'Charcoal', sans-serif;
+  font-family: 'Geneva Bold', 'Charcoal', sans-serif;
   font-weight: bold;
   font-size: 12pt;
   text-align: center;

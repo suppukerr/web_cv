@@ -1,8 +1,22 @@
 <template>
   <div class="menu-bar">
-    <span class="apple"></span>
-    <span class="menu">Finder</span>
-    <div class="time">{{ time }}</div>
+    <div class="left-section">
+      <span class="apple-icon">
+        <img src="/icons/apple.png" alt="Apple" />
+      </span>
+      <span class="menu-item">File</span>
+      <span class="menu-item">Edit</span>
+      <span class="menu-item">View</span>
+      <span class="menu-item">Special</span>
+      <span class="menu-item">Help</span>
+    </div>
+    <div class="right-section">
+      <span class="time">{{ time }}</span>
+      <span class="finder-icon">
+        <img src="/icons/finder.png" alt="Finder" />
+      </span>
+      <span class="finder-text">Finder</span>
+    </div>
   </div>
 </template>
 
@@ -23,28 +37,72 @@ export default {
 </script>
 
 <style scoped>
+
 .menu-bar {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
-  height: 24px;
-  width: 100%;
-  background-color: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(8px);
-  color: white;
-  font-size: 13px;
+  right: 0;
+  height: 20px;
+  background: #c0c0c0;
+  border-bottom: 1px solid #808080;
+  color: black;
+  font-size: 11px;
+  font-family: 'Geneva', 'Lucida Grande', sans-serif;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 10px;
+  padding: 0 8px;
+  z-index: 1000;
 }
-.apple {
-  font-weight: bold;
+
+.left-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
-.menu {
-  margin-left: 10px;
+
+.right-section {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
+
+.apple-icon img {
+  display: flex;
+  align-items: center;
+  height: 16px;
+}
+
+.menu-item {
+  cursor: pointer;
+  padding: 1px 6px;
+  font-size: 11px;
+}
+
+.menu-item:hover {
+  background-color: rgba(0,0,0,0.1);
+}
+
 .time {
-  margin-right: 10px;
+  font-size: 11px;
+  min-width: 35px;
+  text-align: right;
+}
+
+.finder-icon {
+  display: flex;
+  align-items: center;
+  height: 16px;
+}
+
+.finder-icon img {
+  height: 16px;
+  width: auto;
+  max-width: 16px;
+}
+
+.finder-text {
+  font-size: 11px;
 }
 </style>

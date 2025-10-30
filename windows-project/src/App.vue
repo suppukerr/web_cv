@@ -8,8 +8,20 @@
 
     <!-- Desktop Icons -->
     <div class="desktop-icons">
-      <DesktopIcon label="Finder" icon="/icons/finder.png" />
-      <DesktopIcon label="Trash" icon="/icons/trash.png" />
+      <DesktopIcon 
+        label="Finder" 
+        icon="/icons/finder.png"
+        :initialX="750"
+        :initialY="100"
+        @click="openApp('Finder')"
+      />
+      <DesktopIcon 
+        label="Trash" 
+        icon="/icons/trash.png"
+        :initialX="750"
+        :initialY="180"
+        @click="openApp('Trash')"
+      />
     </div>
 
     <!-- Open Windows -->
@@ -23,6 +35,9 @@
 
     <!-- Dock -->
     <Dock @launch="openApp" />
+
+    <!-- Bottom Control Strip -->
+    <ControlStrip />
   </div>
 </template>
 
@@ -31,10 +46,11 @@ import MenuBar from './components/MenuBar.vue'
 import Dock from './components/Dock.vue'
 import Window from './components/Window.vue'
 import DesktopIcon from './components/DesktopIcon.vue'
+import ControlStrip from './components/ControlStrip.vue'
 
 export default {
   name: 'App',
-  components: { MenuBar, Dock, Window, DesktopIcon },
+  components: { MenuBar, Dock, Window, DesktopIcon, ControlStrip },
   data() {
     return {
       openWindow: false
@@ -63,12 +79,13 @@ export default {
 }
 
 .desktop-icons {
-  position: absolute;
-  top: 60px;
-  left: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  position: relative;
   z-index: 1;
+}
+
+.desktop p {
+  color: black;
+  font-family: 'Geneva', 'Lucida Grande', sans-serif;
+  font-size: 11px;
 }
 </style>

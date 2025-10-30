@@ -46,6 +46,10 @@ export default {
   font-size: 14px;
   user-select: none;
 }
+ .title-bar .title {
+  font-family: 'Geneva', 'Charcoal', Arial, sans-serif;
+  font-weight: 700; /* use Geneva Bold */
+ }
 
 .buttons {
   display: flex;
