@@ -5,6 +5,7 @@ export default defineConfig({
   plugins: [vue()],
   base: '/web_cv/',
   build: {
-    outDir: 'dist'
+    outDir: 'dist',
+    assetsDir: 'assets'
   }
 })

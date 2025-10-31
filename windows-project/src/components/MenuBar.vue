@@ -2,7 +2,7 @@
   <div class="menu-bar">
     <div class="left-section">
       <span class="apple-icon">
-        <img src="./icons/apple.svg" alt="Apple" />
+        <img src="/icons/apple.svg" alt="Apple" />
       </span>
       <span class="menu-item">File</span>
       <span class="menu-item">Edit</span>
@@ -13,10 +13,10 @@
     <div class="right-section">
       <span class="time">{{ time }}</span>
       <span class="placeholder-icon">
-        <img src="./icons/placeholder.svg" alt="Placeholder" />
+        <img src="/icons/placeholder.svg" alt="Placeholder" />
       </span>
       <span class="finder-icon">
-        <img src="./icons/finder.svg" alt="Finder" />
+        <img src="/icons/finder.svg" alt="Finder" />
       </span>
       <span class="finder-text">Finder</span>
     </div>
