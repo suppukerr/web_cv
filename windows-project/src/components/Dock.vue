@@ -1,10 +1,10 @@
 <template>
   <div class="dock">
     <div class="dock-icon" @click="$emit('launch', 'Finder')">
-      <img src="/icons/finder.png" alt="Finder" />
+      <img src="/icons/finder.svg" alt="Finder" />
     </div>
     <div class="dock-icon" @click="$emit('launch', 'Trash')">
-      <img src="/icons/trash.png" alt="Trash" />
+      <img src="/icons/trash.svg" alt="Trash" />
     </div>
   </div>
 </template>

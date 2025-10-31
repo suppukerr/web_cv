@@ -47,7 +47,7 @@ export default {
   user-select: none;
 }
  .title-bar .title {
-  font-family: 'Geneva', 'Charcoal', Arial, sans-serif;
+  font-family: 'Inter', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
   font-weight: 700; /* use Geneva Bold */
  }
 
@@ -59,9 +59,9 @@ export default {
   display: inline-block;
   width: 12px;
   height: 12px;
-  border-radius: 50%;
+  border-radius: 6px 0 0 0;
 }
-.close { background: #ff5f56; }
+.close { background: url('/icons/close-button.svg'); }
 .minimize { background: #ffbd2e; }
 .maximize { background: #27c93f; }
 

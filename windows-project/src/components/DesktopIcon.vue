@@ -1,9 +1,11 @@
 <template>
   <div 
     class="desktop-icon" 
+    :class="{ selected: isSelected }"
     :style="{ left: x + 'px', top: y + 'px' }"
     @mousedown="startDrag"
     @click="handleClick"
+    @dblclick="handleDoubleClick"
   >
     <img :src="icon" :alt="label" />
     <span>{{ label }}</span>
@@ -13,7 +15,7 @@
 <script>
 export default {
   name: 'DesktopIcon',
-  props: ['icon', 'label', 'initialX', 'initialY'],
+  props: ['icon', 'label', 'initialX', 'initialY', 'isSelected'],
   data() {
     return {
       x: this.initialX || 0,
@@ -22,7 +24,8 @@ export default {
       startX: 0,
       startY: 0,
       offsetX: 0,
-      offsetY: 0
+      offsetY: 0,
+      clickTimeout: null
     }
   },
   methods: {
@@ -44,9 +47,8 @@ export default {
       this.x = e.clientX - this.offsetX
       this.y = e.clientY - this.offsetY
       
-      // Ограничиваем перемещение границами экрана
       this.x = Math.max(0, Math.min(window.innerWidth - 64, this.x))
-      this.y = Math.max(0, Math.min(window.innerHeight - 80, this.y))
+      this.y = Math.max(25, Math.min(window.innerHeight - 80, this.y))
     },
     
     stopDrag() {
@@ -56,14 +58,18 @@ export default {
     },
     
     handleClick(e) {
-      // Предотвращаем клик если была попытка перетаскивания
       const dragDistance = Math.sqrt(
         Math.pow(e.clientX - this.startX, 2) + Math.pow(e.clientY - this.startY, 2)
       )
       
-      if (dragDistance < 5) { // Клик только если перемещение меньше 5px
-        this.$emit('click', this.label)
+      if (dragDistance < 5) {
+        this.$emit('click', this.label, e)
       }
+    },
+    
+    handleDoubleClick(e) {
+      e.preventDefault()
+      this.$emit('iconClick', this.label)
     }
   }
 }
@@ -77,11 +83,18 @@ export default {
   color: white;
   cursor: grab;
   user-select: none;
-  font-family: 'Geneva', 'Lucida Grande', sans-serif;
+  font-family: 'Inter', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  padding: 2px;
+  z-index: 10;
 }
 
 .desktop-icon:active {
   cursor: grabbing;
+}
+
+.desktop-icon.selected {
+  background-color: rgba(0, 0, 255, 0.3);
+  border: 1px dotted white;
 }
 
 .desktop-icon img {
@@ -94,8 +107,16 @@ export default {
   font-size: 11px;
   margin-top: 4px;
   display: block;
-  font-family: 'Geneva', 'Lucida Grande', sans-serif;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+  font-family: 'Inter', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
   pointer-events: none;
+  background-color: #090933;
+  padding: 1px 3px;
+  border-radius: 0px;
+  color: #D3D3FF;
+}
+
+.desktop-icon.selected span {
+  background-color: #1D5DEC;
+  color: #090933;
 }
 </style>

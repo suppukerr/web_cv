@@ -1,5 +1,5 @@
 <template>
-  <div class="desktop">
+  <div class="desktop" @click="clearSelection">
     <!-- Wallpaper Background -->
     <div class="wallpaper" />
 
@@ -10,55 +10,84 @@
     <div class="desktop-icons">
       <DesktopIcon 
         label="Finder" 
-        icon="/icons/finder.png"
-        :initialX="750"
-        :initialY="100"
-        @click="openApp('Finder')"
+        icon="/icons/finder.svg"
+        :initialX="20"
+        :initialY="40"
+        :isSelected="selectedIcon === 'Finder'"
+        @click="selectIcon"
+        @iconClick="openApp"
+      />
+      <DesktopIcon 
+        label="Resume" 
+        icon="/icons/resume.svg"
+        :initialX="20"
+        :initialY="120"
+        :isSelected="selectedIcon === 'Resume'"
+        @click="selectIcon"
+        @iconClick="openApp"
       />
       <DesktopIcon 
         label="Trash" 
-        icon="/icons/trash.png"
-        :initialX="750"
-        :initialY="180"
-        @click="openApp('Trash')"
+        icon="/icons/trash.svg"
+        :initialX="20"
+        :initialY="200"
+        :isSelected="selectedIcon === 'Trash'"
+        @click="selectIcon"
+        @iconClick="openApp"
       />
     </div>
 
     <!-- Open Windows -->
-    <Window
-      v-if="openWindow"
+    <WindowNew
+      v-if="openWindow === 'Finder'"
       title="Finder"
-      @close="openWindow = false"
+      @close="openWindow = null"
+      :style="{ width: '800px', height: '600px' }"
     >
-      <p>This is a sample Finder window.</p>
-    </Window>
+      <DocumentViewer />
+    </WindowNew>
 
-    <!-- Dock -->
-    <Dock @launch="openApp" />
+    <WindowNew
+      v-if="openWindow === 'Resume'"
+      title="Resume"
+      @close="openWindow = null"
+      :style="{ width: '800px', height: '800px' }"
+    >
+      <PdfViewer />
+    </WindowNew>
 
-    <!-- Bottom Control Strip -->
-    <ControlStrip />
   </div>
 </template>
 
 <script>
 import MenuBar from './components/MenuBar.vue'
 import Dock from './components/Dock.vue'
-import Window from './components/Window.vue'
+import WindowNew from './components/WindowNew.vue'
 import DesktopIcon from './components/DesktopIcon.vue'
-import ControlStrip from './components/ControlStrip.vue'
+import DocumentViewer from './components/DocumentViewer.vue'
+import PdfViewer from './components/PdfViewer.vue'
 
 export default {
   name: 'App',
-  components: { MenuBar, Dock, Window, DesktopIcon, ControlStrip },
+  components: { MenuBar, Dock, WindowNew, DesktopIcon, DocumentViewer, PdfViewer },
   data() {
     return {
-      openWindow: false
+      openWindow: null,
+      selectedIcon: null
     }
   },
   methods: {
     openApp(name) {
-      if (name === 'Finder') this.openWindow = true
+      this.openWindow = name
+    },
+    selectIcon(label, e) {
+      if (e && e.stopPropagation) {
+        e.stopPropagation()
+      }
+      this.selectedIcon = this.selectedIcon === label ? null : label
+    },
+    clearSelection() {
+      this.selectedIcon = null
     }
   }
 }
@@ -75,17 +104,11 @@ export default {
   background: url('/wallpapers/wallpapers2.png') center/cover no-repeat;
   position: absolute;
   inset: 0;
-  z-index: -1;
+  z-index: 0;
 }
 
 .desktop-icons {
   position: relative;
   z-index: 1;
-}
-
-.desktop p {
-  color: black;
-  font-family: 'Geneva', 'Lucida Grande', sans-serif;
-  font-size: 11px;
 }
 </style>
