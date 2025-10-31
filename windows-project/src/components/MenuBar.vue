@@ -2,7 +2,7 @@
   <div class="menu-bar">
     <div class="left-section">
       <span class="apple-icon">
-        <img src="/icons/apple.png" alt="Apple" />
+        <img src="./icons/apple.svg" alt="Apple" />
       </span>
       <span class="menu-item">File</span>
       <span class="menu-item">Edit</span>
@@ -12,8 +12,11 @@
     </div>
     <div class="right-section">
       <span class="time">{{ time }}</span>
+      <span class="placeholder-icon">
+        <img src="./icons/placeholder.svg" alt="Placeholder" />
+      </span>
       <span class="finder-icon">
-        <img src="/icons/finder.png" alt="Finder" />
+        <img src="./icons/finder.svg" alt="Finder" />
       </span>
       <span class="finder-text">Finder</span>
     </div>
@@ -46,9 +49,10 @@ export default {
   height: 20px;
   background: #c0c0c0;
   border-bottom: 1px solid #808080;
+  border-radius: 0 0 0 0;
   color: black;
   font-size: 11px;
-  font-family: 'Geneva', 'Lucida Grande', sans-serif;
+  font-family: 'Inter', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -76,12 +80,12 @@ export default {
 
 .menu-item {
   cursor: pointer;
-  padding: 1px 6px;
+  padding: 1px 2px;
   font-size: 11px;
 }
 
 .menu-item:hover {
-  background-color: rgba(0,0,0,0.1);
+  background-color: #2F2F99;
 }
 
 .time {
