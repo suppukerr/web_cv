@@ -10,7 +10,7 @@
     <div class="desktop-icons">
       <DesktopIcon 
         label="Links" 
-        icon="/icons/finder.svg"
+        icon="/web_cv/icons/finder.svg"
         :initialX="20"
         :initialY="40"
         :isSelected="selectedIcon === 'Links'"
@@ -19,7 +19,7 @@
       />
       <DesktopIcon 
         label="Resume" 
-        icon="/icons/resume.svg"
+        icon="/web_cv/icons/resume.svg"
         :initialX="20"
         :initialY="120"
         :isSelected="selectedIcon === 'Resume'"
