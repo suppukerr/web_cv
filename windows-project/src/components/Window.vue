@@ -61,7 +61,7 @@ export default {
   height: 12px;
   border-radius: 6px 0 0 0;
 }
-.close { background: url('/icons/close-button.svg'); }
+.close { background: url('./icons/close-button.svg'); }
 .minimize { background: #ffbd2e; }
 .maximize { background: #27c93f; }
 
