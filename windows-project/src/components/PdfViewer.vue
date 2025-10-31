@@ -34,7 +34,7 @@ export default {
     return {
       zoom: 1,
       rotation: 0,
-      pdfUrl: '/documents/my_resume.pdf',
+      pdfUrl: '/documents/my_resume_1.pdf',
       pdfLoaded: false
     }
   },

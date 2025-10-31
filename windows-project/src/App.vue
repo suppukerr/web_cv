@@ -9,11 +9,11 @@
     <!-- Desktop Icons -->
     <div class="desktop-icons">
       <DesktopIcon 
-        label="Finder" 
+        label="Links" 
         icon="/icons/finder.svg"
         :initialX="20"
         :initialY="40"
-        :isSelected="selectedIcon === 'Finder'"
+        :isSelected="selectedIcon === 'Links'"
         @click="selectIcon"
         @iconClick="openApp"
       />
@@ -26,21 +26,12 @@
         @click="selectIcon"
         @iconClick="openApp"
       />
-      <DesktopIcon 
-        label="Trash" 
-        icon="/icons/trash.svg"
-        :initialX="20"
-        :initialY="200"
-        :isSelected="selectedIcon === 'Trash'"
-        @click="selectIcon"
-        @iconClick="openApp"
-      />
     </div>
 
     <!-- Open Windows -->
     <WindowNew
-      v-if="openWindow === 'Finder'"
-      title="Finder"
+      v-if="openWindow === 'Links'"
+      title="Links"
       @close="openWindow = null"
       :style="{ width: '800px', height: '600px' }"
     >
