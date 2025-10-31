@@ -137,13 +137,6 @@ export default {
             title: 'Поисковик с метриками BM-25 и BERT',
             description: 'Разработка поисковой системы в рамках курса по информационному поиску',
             githubLink: 'https://github.com/suppukerr/HW_infosearch'
-          },
-          {
-            id: 6,
-            year: 2022,
-            title: 'Учебный чат-бот',
-            description: 'Образовательный чат-бот для определения погоды',
-            githubLink: 'https://github.com/suppukerr/weather_bot'
           }
         ],
         experience: [
