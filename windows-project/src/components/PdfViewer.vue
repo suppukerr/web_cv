@@ -5,7 +5,6 @@
       <span class="zoom-level">{{ Math.round(zoom * 100) }}%</span>
       <button @click="zoomIn" :disabled="zoom >= 2">+</button>
       <button @click="rotateDocument">↻</button>
-      <button @click="fitToWindow">Fit</button>
       <button @click="downloadPdf">Download</button>
     </div>
     
