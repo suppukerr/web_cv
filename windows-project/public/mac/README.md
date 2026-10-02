@@ -19,3 +19,8 @@ Mac OS artwork belongs to its original owners and is not newly licensed by us.
 `document.svg`, `alias.svg`, `disk.svg`, and `computer.svg` are portfolio-specific
 pixel-vector adaptations. All are served locally under the configured Vite base.
 No source checkout or benchmark website is required to build or run the site.
+
+`startup-reference.png` is the Mac OS 9 startup screenshot supplied by the user.
+The splash clips its original logo panel in CSS; the frame, status, and progress
+bar are HTML/CSS and remain interactive. Classic Mac OS artwork retains its
+original ownership. This asset is served locally with no remote requests.

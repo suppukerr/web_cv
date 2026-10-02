@@ -68,6 +68,7 @@ watch(() => desktop.activeId, () => {
   window.history.replaceState(null, '', url)
 })
 onMounted(() => {
+  updateViewport()
   navigateHash()
   const win=activeWindow.value
   if (win?.fileId === 'disk') win.rect={x:Math.max(0,Math.min(24,desktop.viewport.width-386)),y:52,width:Math.min(386,desktop.viewport.width),height:Math.min(246,desktop.viewport.height-52)}

@@ -1,0 +1,93 @@
+/* Startup geometry measured from Mac OS 9.0.4 in Infinite Mac and the supplied
+   2x screenshot. The original screenshot artwork is clipped with CSS. */
+@font-face {
+  font-family: BootCharcoal;
+  src: url('../public/mac/Charcoal.woff2') format('woff2');
+  font-display: swap;
+}
+html, body { margin: 0; height: 100%; background: #9999c6; }
+.startup-screen {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: #9999c6;
+  z-index: 3000;
+  user-select: none;
+  font: 12px BootCharcoal, Charcoal, Arial, sans-serif;
+  color: #000;
+}
+.startup-window {
+  position: relative;
+  width: min(422px, calc(100vw - 24px));
+  aspect-ratio: 422 / 324;
+  background: #ddd;
+  border: 1px solid #000;
+  box-shadow: inset 1px 1px #fff, inset -1px -1px #888;
+  transform: translateY(-9vh);
+  box-sizing: border-box;
+}
+.startup-artwork {
+  position: absolute;
+  left: 8.29%;
+  top: 8.02%;
+  width: 82.94%;
+  height: 68.52%;
+  overflow: hidden;
+  background: #fff;
+}
+.startup-artwork img {
+  position: absolute;
+  left: -38%;
+  top: -29.73%;
+  width: 178%;
+  height: auto;
+  max-width: none;
+  image-rendering: pixelated;
+}
+.startup-status {
+  position: absolute;
+  left: 5%;
+  right: 5%;
+  top: 82.72%;
+  margin: 0;
+  text-align: center;
+  line-height: 15px;
+}
+.startup-progress {
+  position: absolute;
+  left: 30.92%;
+  top: 90.12%;
+  width: 38.15%;
+  height: 3.7%;
+  box-sizing: border-box;
+  border: 1px solid #000;
+  background: #bbb;
+  box-shadow: inset 1px 1px #666, inset -1px -1px #fff;
+  overflow: hidden;
+}
+.startup-fill {
+  width: 0%;
+  height: 100%;
+  box-sizing: border-box;
+  border-right: 1px solid #000;
+  background: linear-gradient(#000080 0%, #7777dd 25%, #eee 50%, #7777dd 75%, #000080 100%);
+  box-shadow: inset 1px 1px #8888ff, inset -1px -1px #333399;
+  transition: width 180ms steps(3, end);
+}
+.startup-retry {
+  position: absolute;
+  top: 93%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 1px 8px;
+  background: #ddd;
+  border: 1px solid #000;
+  color: #000;
+  font: inherit;
+  cursor: pointer;
+}
+.startup-retry[hidden] { display: none; }
+.startup-screen.failed .startup-status { top: 80%; font-size: 11px; }
+@media (max-width: 440px) { .startup-window { transform: translateY(-6vh); } }
+@media (prefers-reduced-motion: reduce) { .startup-fill { transition: none; } }

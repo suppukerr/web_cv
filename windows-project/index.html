@@ -2,13 +2,25 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="%BASE_URL%icons/finder.svg" />
+  <link rel="icon" type="image/svg+xml" href="/icons/finder.svg" />
+  <link rel="stylesheet" href="/src/startup.css" />
+  <link rel="preload" as="image" href="/mac/startup-reference.png" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Sasha Shakhnova’s CV, experience and projects in a Mac OS 9 desktop." />
   <title>Sasha Shakhnova — Macintosh Portfolio</title>
 </head>
 <body>
-  <div id="app"></div>
+  <div id="app" aria-busy="true">
+    <section id="startup-screen" class="startup-screen" aria-label="Mac OS 9 startup">
+      <div class="startup-window">
+        <div class="startup-artwork"><img src="/mac/startup-reference.png" alt="Mac OS 9" width="1246" height="936" fetchpriority="high" /></div>
+        <p id="startup-status" class="startup-status" role="status">Starting Up...</p>
+        <div id="startup-progress" class="startup-progress" role="progressbar" aria-label="Loading portfolio" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="startup-fill" class="startup-fill"></div></div>
+        <button id="startup-retry" class="startup-retry" hidden>Reload</button>
+      </div>
+    </section>
+    <noscript>This portfolio needs JavaScript. Enable it to open the desktop.</noscript>
+  </div>
   <script type="module" src="/src/main.js"></script>
 </body>
 </html>

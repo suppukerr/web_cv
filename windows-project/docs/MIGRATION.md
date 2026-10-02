@@ -93,6 +93,20 @@ Final browser evidence:
 
 ## Validation
 
+The startup screen uses the original logo panel from the user-supplied Mac OS 9
+screenshot, with geometry compared against the running Infinite Mac benchmark.
+Static HTML displays the splash before Vue starts. The progress bar tracks the
+application import, local fonts, and desktop images; cached loads retain a
+two-second presentation. Reduced-motion users skip this extra delay. Failed
+optional images/fonts time out without blocking the CV, and application import
+errors display a Reload button. Each refresh shows the splash and preserves
+hash navigation. All startup assets are local.
+
+Production-preview checks confirmed startup, automatic transition to Projects
+via `#projects`, repeat refresh, and a 375×667 viewport with no console errors.
+Screenshots: [desktop startup](screenshots/startup-screen.jpg) and
+[mobile startup](screenshots/startup-mobile.jpg).
+
 Run from `windows-project`:
 
 ```sh
