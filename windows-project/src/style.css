@@ -1,144 +1,32 @@
-@font-face {
-  font-family: 'Geneva';
-  src:
-    local('Geneva'),
-    url('/fonts/Geneva.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
+/* Platinum button, dialog and select border-image techniques adapted from
+   Infinite Mac (Mihai Parparita), Apache-2.0. Modified for Vue and local assets. */
+@font-face{font-family:Charcoal;src:url('../public/mac/Charcoal.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:Geneva;src:url('../public/fonts/Geneva.ttf') format('truetype');font-weight:400;font-display:swap}
+:root{font-family:Geneva,Arial,sans-serif;font-size:12px;color:#000;background:#9999c6;color-scheme:light;font-synthesis:none;--platinum:#ddd;--selection:#000080}
+*{box-sizing:border-box}html,body,#app{margin:0;width:100%;height:100%;overflow:hidden}body{min-width:320px}button,input,select{font:inherit;color:inherit}button{cursor:default}button{border:0;background:none;padding:0}button:disabled{color:#888}button:focus-visible,a:focus-visible,[tabindex]:focus-visible{outline:1px dotted #000;outline-offset:-2px}a{color:#0000bb}img{image-rendering:pixelated}p{margin:0 0 12px}h1,h2,h3{font-family:Charcoal,Geneva,Arial,sans-serif;font-weight:400;line-height:1.3}h1{font-size:18px;margin:0 0 12px}h2{font-size:15px;margin:20px 0 8px}h3{font-size:13px;margin:12px 0 6px}hr{border:0;border-top:1px solid #888;border-bottom:1px solid #fff;margin:8px 0}ul{padding-left:22px}li{margin-bottom:8px}
+.desktop{position:relative;width:100%;height:100%;overflow:hidden;user-select:none;touch-action:none}.platinum{background:#9999c6}.pattern{background-color:#aaa;background-image:repeating-conic-gradient(#aaa 0% 25%,#ccc 0% 50%);background-size:2px 2px}
+.menu-bar{height:20px;position:absolute;inset:0 0 auto;z-index:1000;background:#ddd;box-shadow:inset 0 1px #fff;border-bottom:1px solid #000;display:flex;align-items:stretch;justify-content:space-between;border-radius:8px 8px 0 0;font-family:Charcoal,Arial,sans-serif;font-size:12px;line-height:18px;padding:0 10px}
+.menu-left,.menu-right{display:flex;align-items:stretch}.menu-right{align-items:center}.menu-root{position:relative}.menu-root>button{height:19px;padding:0 7px;display:flex;align-items:center;gap:5px;font-family:Charcoal,Arial,sans-serif;white-space:nowrap}.menu-root>button.apple-menu{padding:0 9px 0 4px}.menu-root img{width:16px;height:16px}.menu-root>button.menu-open{background:var(--selection);color:#fff}.menu-divider{height:18px;width:6px;margin-left:7px}.menu-right time{white-space:nowrap}
+.menu-popup{position:absolute;top:19px;left:0;min-width:190px;padding:3px 0;background:#ddd;border:1px solid #000;box-shadow:1px 1px 0 #000;line-height:16px;z-index:1001}.menu-popup button{font-family:Charcoal,Arial,sans-serif;display:flex;align-items:center;width:100%;min-height:16px;padding:0 10px 0 2px;text-align:left;white-space:nowrap}.menu-check{display:inline-block;width:18px;flex:none}.menu-shortcut{margin-left:auto;padding-left:24px}.menu-popup button:not(:disabled):is(:hover,:focus-visible){outline:0;color:#fff;background:var(--selection)}.menu-popup hr{margin:3px 1px}.menu-row{position:relative}.menu-popup.submenu{left:calc(100% - 2px);top:-4px;min-width:145px}.application-menu .menu-popup{left:auto;right:0;max-width:min(400px,90vw);overflow-wrap:anywhere}.application-menu .menu-popup button{white-space:normal}
+.desktop-icon{width:80px;min-height:60px;padding:0 2px 6px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:3px;text-align:center;line-height:13px;font-family:Geneva,Arial,sans-serif;font-size:10px;touch-action:none}.desktop-icon.positioned{position:absolute;z-index:2}.mac-icon{width:32px;height:32px;object-fit:contain;flex:none;pointer-events:none}.mac-icon.small{width:16px;height:16px}.desktop-icon span{display:block;width:max-content;max-width:100%;padding:0 2px;background:#ddd;overflow-wrap:anywhere;pointer-events:none}.desktop-icon.selected span{color:#fff;background:#000}.desktop-icon.selected .mac-icon{filter:brightness(.55)}.finder-icons .desktop-icon span{background:transparent}.finder-icons .desktop-icon.selected span{background:#000;color:#fff}.selection-marquee{position:absolute;z-index:900;border:1px dotted #000;pointer-events:none}
+.mac-window{position:absolute;background:#ddd;border:1px solid #000;padding:3px;box-shadow:1px 1px 0 #000,inset 1px 1px 0 #fff,inset -1px -1px 0 #888;display:flex;flex-direction:column;overflow:hidden}.mac-window.inactive{border-color:#666;box-shadow:inset 1px 1px 0 #eee,inset -1px -1px 0 #aaa}.title-bar{height:16px;min-height:16px;display:flex;align-items:center;gap:4px;margin:-2px -1px 2px;padding:0 2px;touch-action:none;font-family:Charcoal,Arial,sans-serif;font-size:12px;line-height:15px}.window-title{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex-shrink:1;padding:0 2px}.title-lines{flex:1;min-width:4px;height:13px;background:repeating-linear-gradient(to bottom,#fff 0 1px,#888 1px 2px,#ddd 2px 3px)}.window-button{height:13px;width:13px;flex:none;border:1px solid #555;background:linear-gradient(135deg,#fff,#bbb);box-shadow:inset 1px 1px 0 #ddd,inset -1px -1px 0 #888;position:relative}.window-button:active{background:linear-gradient(135deg,#888,#ddd);box-shadow:inset 1px 1px #555}.close-button{background-image:url('../public/icons/close-button.svg');border:0;box-shadow:none}.zoom-button:after{content:'';position:absolute;inset:2px;border:1px solid #555;border-top-width:2px}.collapse-button:after{content:'';position:absolute;left:2px;right:2px;top:3px;border-top:2px solid #555;border-bottom:1px solid #fff}.inactive .title-lines{background:none}.inactive .window-title{color:#888}.inactive .window-button{visibility:hidden}.window-body{flex:1;min-height:0;border:1px solid #555;background:#fff;overflow:hidden}.resize-corner{position:absolute;bottom:3px;right:3px;width:15px;height:15px;border-left:1px solid #888;border-top:1px solid #888;background:#ddd;cursor:nwse-resize;touch-action:none}.resize-corner:after{content:'';position:absolute;inset:3px;background:repeating-linear-gradient(135deg,transparent 0 2px,#777 2px 3px,#fff 3px 4px);clip-path:polygon(100% 0,100% 100%,0 100%)}.inactive .resize-corner:after{opacity:.35}
+.finder-window,.portfolio-document{display:flex;flex-direction:column;height:100%;min-height:0}.finder-info{height:21px;min-height:21px;background:#eee;display:flex;justify-content:center;gap:12px;align-items:center;border-bottom:1px solid #555;font-size:10px;box-shadow:inset 0 1px #fff}.inactive .finder-info{color:#888}.finder-icons{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));align-content:start;justify-items:center;gap:4px 0;padding:4px 2px;min-height:180px}.finder-icons .desktop-icon{width:100%;max-width:125px;min-height:60px}.empty-folder{padding:20px;grid-column:1/-1;color:#777}.finder-list{min-width:300px;min-height:180px}.list-heading{display:grid;grid-template-columns:1fr 110px;position:sticky;top:0;z-index:1}.list-heading button{background:#ddd;border:3px solid transparent;border-image:url('../public/mac/PlatinumBevelButton.png') 3 fill / 3px;padding:1px 4px;text-align:left;font-size:10px}.list-heading button:active{border-image-source:url('../public/mac/PlatinumBevelButton-Active.png')}.list-heading span{float:right}.finder-row{display:grid;grid-template-columns:1fr 110px;width:100%;align-items:center;min-height:22px;text-align:left;font-size:11px;padding:2px 5px}.finder-row>span:first-child{display:flex;align-items:center;gap:5px;overflow-wrap:anywhere}.finder-row.selected{background:var(--selection);color:white}
+.scroll-area{display:grid;grid-template-columns:minmax(0,1fr) 16px;grid-template-rows:minmax(0,1fr) 16px;flex:1;min-height:0;overflow:hidden;background:white}.scroll-viewport{overflow:auto;scrollbar-width:none;outline-offset:-3px;touch-action:pan-x pan-y;overscroll-behavior:contain}.scroll-viewport::-webkit-scrollbar{display:none}.scroll-content{min-width:100%;min-height:100%}.scrollbar{background:#ddd;display:flex;border-left:1px solid #888;font-family:Arial,sans-serif;color:#555}.scrollbar.vertical{grid-area:1/2;flex-direction:column}.scrollbar.horizontal{grid-area:2/1;border-top:1px solid #888;border-left:0}.scrollbar>button{width:15px;height:15px;flex:none;border:1px solid;border-color:#fff #888 #888 #fff;background:#ddd;line-height:11px;font-size:13px}.scrollbar>button:active{background:#aaa;border-color:#888 #eee #eee #888}.scroll-track{flex:1;position:relative;background:repeating-linear-gradient(90deg,#ddd 0 1px,#ccc 1px 2px);box-shadow:inset 1px 1px #aaa}.scrollbar.horizontal .scroll-track{background:repeating-linear-gradient(#ddd 0 1px,#ccc 1px 2px)}.scroll-thumb{position:absolute;background:#ccc;border:1px solid;border-color:#fff #777 #777 #fff;box-shadow:inset -1px -1px #aaa;touch-action:none}.vertical .scroll-thumb{width:14px;left:0}.horizontal .scroll-thumb{height:14px;top:0}.scrollbar.empty .scroll-track{background:#eee;box-shadow:none}.scrollbar.empty button{color:#aaa}.inactive .scroll-thumb{background:#eee;box-shadow:none;border-color:#ddd}.scroll-corner{grid-area:2/2;background:#ddd;border-top:1px solid #888;border-left:1px solid #888}
+.platinum-button{display:inline-block;border:4px solid transparent;border-image:url('../public/mac/PlatinumButton.png') 4 fill / 4px;background:transparent;padding:1px 8px;font-family:Charcoal,Arial,sans-serif;font-size:13px;line-height:13px;color:#000;text-decoration:none;white-space:nowrap;image-rendering:pixelated}.platinum-button:active:not(:disabled){border-image-source:url('../public/mac/PlatinumButton-Active.png');color:#fff}.platinum-button:disabled{opacity:.5}.platinum-button:focus-visible{outline:2px solid #6666c5;outline-offset:-1px;border-radius:2px}.default-button{outline:2px solid #555;outline-offset:2px;border-radius:2px}.platinum-input{width:100%;border:4px solid transparent;border-image:url('../public/mac/PlatinumInput.png') 4 fill / 4px;padding:2px;font-size:13px;background:transparent}.platinum-select{appearance:none;border:solid transparent;border-width:2px 22px 2px 3px;border-image:url('../public/mac/PlatinumSelect.png') 3 22 3 3 fill / 3px 22px 3px 3px;height:20px;padding:0;font-size:12px;background:transparent}.platinum-input:focus-visible,.platinum-select:focus-visible{outline:2px solid #6666c5;outline-offset:-1px}
+.document-toolbar{min-height:32px;display:flex;align-items:center;gap:8px;padding:4px 8px;border-bottom:1px solid #888;background:#ddd;font-size:10px}.toolbar-spacer{flex:1}.document-page{padding:24px;line-height:1.6;user-select:text;touch-action:pan-y;overflow-wrap:anywhere}.document-subtitle{color:#555}.document-actions{display:flex;gap:12px;flex-wrap:wrap;margin:24px 0 0}.contact-list{display:grid;grid-template-columns:65px 1fr;gap:14px 8px}.contact-list dd,.info-list dd{margin:0}.skills-table{border-collapse:collapse;width:100%;font-size:12px}.skills-table td,.skills-table th{border-bottom:1px solid #ccc;text-align:left;padding:5px}.skills-table th{color:#777;font-weight:400;width:30px}.skills-table td:last-child{color:#555;font-size:10px}.pdf-viewer{width:100%;flex:1;min-height:0;border:0;background:#fff}.pdf-fallback{font-size:10px;padding:4px;margin:0;background:#ddd}
+.dialog-backdrop{position:absolute;inset:0;z-index:2000;display:flex;align-items:center;justify-content:center;background-image:repeating-conic-gradient(#0008 0% 25%,transparent 0% 50%);background-size:2px 2px}.mac-dialog{border:5px solid transparent;border-image:url('../public/mac/PlatinumDialogFrame.png') 5 fill / 5px;padding:18px;width:min(480px,calc(100vw - 24px));max-height:calc(100% - 40px);overflow:auto;image-rendering:pixelated;user-select:text}.mac-dialog h1{font-family:Charcoal,Arial,sans-serif;font-size:16px;margin:0 0 14px}.dialog-content{line-height:1.5;font-size:12px}.mac-dialog footer{display:flex;justify-content:flex-end;gap:12px;margin-top:18px}.mac-dialog label{display:block;margin:0 0 6px}.dialog-description{font-size:10px;color:#555;margin-top:18px}.about-computer{display:flex;align-items:center;gap:16px;margin:10px 0 18px}.about-computer img{width:48px;height:48px}.about-computer strong{font-family:Charcoal,Arial,sans-serif;font-size:24px;font-weight:400}.about-computer p{margin:0}.info-list{display:grid;grid-template-columns:60px 1fr;gap:10px}.pattern-preview{width:100%;height:70px;border:1px solid #888;margin-top:12px}.welcome-note{position:absolute;left:calc(100% - 380px);top:55px;width:230px;background:#ffff99;border:1px solid;border-color:#ffffdd #cccc66 #cccc66 #ffffdd;padding:8px;font-size:11px;line-height:1.4;z-index:1;user-select:text;touch-action:auto}.welcome-note strong{display:block;font-family:Charcoal,Arial,sans-serif;font-size:16px;line-height:1.2;margin-bottom:12px;font-weight:400}.welcome-note button{text-decoration:underline;font-size:10px}.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+@media(max-width:850px){.welcome-note{display:none}}@media(max-width:560px){.menu-bar{padding:0 3px}.menu-root>button{padding:0 5px}.menu-right time,.menu-divider{display:none}.application-menu>button span{display:none}.menu-popup{min-width:170px}.document-page{padding:14px}.contact-list{grid-template-columns:1fr;gap:4px}.contact-list dd{margin-bottom:12px}}
 
-/* Geneva Bold */
-@font-face {
-  font-family: 'Geneva';
-  src:
-    local('Geneva Bold'),
-    url('/fonts/Geneva Bold.ttf') format('truetype');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
+/* Finder controls sampled at 1× from the running 800×600 Mac OS 9.0.4 benchmark. */
+.close-button{background-image:url('../public/mac/close.png')}
+.zoom-button{background:url('../public/mac/zoom.png');border:0;box-shadow:none}
+.collapse-button{background:url('../public/mac/collapse.png');border:0;box-shadow:none}
+.zoom-button:after,.collapse-button:after{display:none}
+.resize-corner:after{inset:0;clip-path:none;background:url('../public/mac/resize.png')}
+.vertical .scroll-track,.horizontal .scroll-track{order:0}
+.scrollbar>button:first-child{order:1}.scrollbar>button:last-child{order:2}
+.inactive .scrollbar>button{visibility:hidden}
+.finder-icons{grid-template-columns:repeat(auto-fill,minmax(110px,1fr))}
 
-/* Geneva Italic weights (optional, if used) */
-@font-face {
-  font-family: 'Geneva';
-  src:
-    local('Geneva Normal Italic'),
-    url('/fonts/Geneva/genevanormal_italic.ttf') format('truetype');
-  font-weight: 400;
-  font-style: italic;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Geneva';
-  src:
-    local('Geneva Bold Italic'),
-    url('/fonts/Geneva/genevabold_italic.ttf') format('truetype');
-  font-weight: 700;
-  font-style: italic;
-  font-display: swap;
-}
-
-/* Use a single family name 'Geneva' for all weights; select bold via font-weight */
-
-@font-face {
-  font-family: 'Charcoal';
-  src:
-    local('Charcoal'),
-    url('/fonts/Charcoal.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-:root {
-  font-family: 'Geneva', 'Charcoal', Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  font-family: 'Geneva', 'Charcoal', Arial, sans-serif;
-  /* font-family: -apple-system, BlinkMacSystemFont, 'San Francisco', sans-serif; */
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-.card {
-  padding: 2em;
-}
-
-#app {
-  width: 100vw;
-  height: 100vh;
-  max-width: 1280px;
-  margin: 0;
-  padding: 0;
-  text-align: center;
-}
-
-/* @media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-} */
+.pdf-container{position:relative;display:flex;flex:1;min-height:0}
+.pdf-focus-shield{position:absolute;inset:0;z-index:1;background:transparent}

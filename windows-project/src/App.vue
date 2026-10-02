@@ -1,105 +1,91 @@
-<template>
-  <div class="desktop" @click="clearSelection">
-    <!-- Wallpaper Background -->
-    <div class="wallpaper" />
-
-    <!-- Menu Bar -->
-    <MenuBar />
-
-    <!-- Desktop Icons -->
-    <div class="desktop-icons">
-      <DesktopIcon 
-        label="Links" 
-        icon="/web_cv/icons/finder.svg"
-        :initialX="20"
-        :initialY="40"
-        :isSelected="selectedIcon === 'Links'"
-        @click="selectIcon"
-        @iconClick="openApp"
-      />
-      <DesktopIcon 
-        label="Resume" 
-        icon="/web_cv/icons/resume.svg"
-        :initialX="20"
-        :initialY="120"
-        :isSelected="selectedIcon === 'Resume'"
-        @click="selectIcon"
-        @iconClick="openApp"
-      />
-    </div>
-
-    <!-- Open Windows -->
-    <WindowNew
-      v-if="openWindow === 'Links'"
-      title="Links"
-      @close="openWindow = null"
-      :style="{ width: '800px', height: '600px' }"
-    >
-      <DocumentViewer />
-    </WindowNew>
-
-    <WindowNew
-      v-if="openWindow === 'Resume'"
-      title="Resume"
-      @close="openWindow = null"
-      :style="{ width: '800px', height: '800px' }"
-    >
-      <PdfViewer />
-    </WindowNew>
-
-  </div>
-</template>
-
-<script>
+<script setup>
+import { computed, ref, watch, onMounted, onBeforeUnmount } from 'vue'
 import MenuBar from './components/MenuBar.vue'
-import Dock from './components/Dock.vue'
-import WindowNew from './components/WindowNew.vue'
 import DesktopIcon from './components/DesktopIcon.vue'
-import DocumentViewer from './components/DocumentViewer.vue'
-import PdfViewer from './components/PdfViewer.vue'
-
-export default {
-  name: 'App',
-  components: { MenuBar, Dock, WindowNew, DesktopIcon, DocumentViewer, PdfViewer },
-  data() {
-    return {
-      openWindow: null,
-      selectedIcon: null
-    }
-  },
-  methods: {
-    openApp(name) {
-      this.openWindow = name
-    },
-    selectIcon(label, e) {
-      if (e && e.stopPropagation) {
-        e.stopPropagation()
-      }
-      this.selectedIcon = this.selectedIcon === label ? null : label
-    },
-    clearSelection() {
-      this.selectedIcon = null
-    }
-  }
+import MacWindow from './components/MacWindow.vue'
+import FinderWindow from './components/FinderWindow.vue'
+import PortfolioDocument from './components/PortfolioDocument.vue'
+import MacDialog from './components/MacDialog.vue'
+import { usePointer } from './composables/usePointer'
+import { desktop, allFiles, activeWindow, selectedFiles, open, select, close, showDialog, updateViewport, children, moveToTrash } from './composables/useDesktop'
+const pointer = usePointer(), marquee = ref(null)
+const desktopFiles = computed(() => allFiles.value.filter(f => ['disk','resume','links','trash'].includes(f.id) || (f.custom && f.parent === null && !desktop.trash.includes(f.id))))
+function position(file) {
+  const fallback = file.id === 'trash' ? {x:desktop.viewport.width-92,y:desktop.viewport.height-76} : file.custom ? {x:24+(desktopFiles.value.indexOf(file)-4)*88,y:40} : {x:desktop.viewport.width-92,y:40+['disk','resume','links'].indexOf(file.id)*76}
+  const stored = desktop.iconPositions[file.id] || fallback
+  return {x:Math.max(0,Math.min(desktop.viewport.width-80,stored.x)),y:Math.max(24,Math.min(desktop.viewport.height-60,stored.y))}
 }
+function move(file,p) { desktop.iconPositions[file.id] = {x:Math.max(0,Math.min(desktop.viewport.width-80,p.x)),y:Math.max(24,Math.min(desktop.viewport.height-60,p.y))} }
+function drop(file,e) {
+  if (!file.custom) return
+  const trash = position(allFiles.value.find(f => f.id === 'trash'))
+  if(e.clientX >= trash.x && e.clientX <= trash.x+80 && e.clientY >= trash.y && e.clientY <= trash.y+60) {desktop.selected=[file.id]; moveToTrash()}
+}
+function background(e) {
+  if(e.target !== e.currentTarget || e.button !== 0) return
+  desktop.menu = null
+  desktop.activeId = null
+  desktop.selectionOwner = 'desktop'
+  const initial = e.shiftKey ? [...desktop.selected] : []
+  desktop.selected = initial
+  const x=e.clientX,y=e.clientY
+  pointer(e,(dx,dy) => {
+    const box = {left:Math.min(x,x+dx),top:Math.min(y,y+dy),width:Math.abs(dx),height:Math.abs(dy)}
+    marquee.value = box
+    desktop.selected = [...new Set([...initial,...desktopFiles.value.filter(f => {const p=position(f); return p.x+80 > box.left && p.x < box.left+box.width && p.y+60 > box.top && p.y < box.top+box.height}).map(f => f.id)])]
+  },() => {marquee.value = null})
+}
+function key(e) {
+  if (desktop.dialog || ['INPUT','TEXTAREA','SELECT','IFRAME'].includes(e.target.tagName)) return
+  if(e.key === 'Escape') {desktop.menu=null; desktop.selected=[]; return}
+  if(e.metaKey || e.ctrlKey) {
+    const k=e.key.toLowerCase()
+    if(!['o','w','i','a','n','backspace'].includes(k)) return
+    e.preventDefault()
+    if(k === 'o') selectedFiles.value.forEach(open)
+    if(k === 'w') close()
+    if(k === 'i' && selectedFiles.value.length) showDialog('info',selectedFiles.value[0])
+    if(k === 'n' && (!activeWindow.value || ['folder','disk'].includes(activeWindow.value.kind))) showDialog('new-folder')
+    if(k === 'backspace') moveToTrash()
+    if(k === 'a') {
+      const win = activeWindow.value
+      if(win && !['folder','disk','trash'].includes(win.kind)) return
+      desktop.selectionOwner = win ? win.id : 'desktop'
+      desktop.selected = (win ? win.kind === 'trash' ? allFiles.value.filter(f => desktop.trash.includes(f.id)) : children(win.fileId) : desktopFiles.value).map(f => f.id)
+    }
+  } else if(e.key === 'Enter' && e.target === document.body) selectedFiles.value.forEach(open)
+}
+function dismissMenu(e) { if(!e.target.closest('.menu-bar')) desktop.menu = null }
+function navigateHash() {
+  let id
+  try { id = decodeURIComponent(window.location.hash.slice(1)) } catch { id = '' }
+  if (id === 'desktop') {desktop.activeId = null; return}
+  open(allFiles.value.find(f => f.id === id && f.kind !== 'alias') || allFiles.value[0])
+}
+watch(() => desktop.activeId, () => {
+  const url = new URL(window.location.href)
+  url.hash = activeWindow.value?.fileId || 'desktop'
+  window.history.replaceState(null, '', url)
+})
+onMounted(() => {
+  navigateHash()
+  const win=activeWindow.value
+  if (win?.fileId === 'disk') win.rect={x:Math.max(0,Math.min(24,desktop.viewport.width-386)),y:52,width:Math.min(386,desktop.viewport.width),height:Math.min(246,desktop.viewport.height-52)}
+  window.addEventListener('hashchange',navigateHash)
+  window.addEventListener('resize',updateViewport)
+  window.addEventListener('keydown',key)
+  window.addEventListener('pointerdown',dismissMenu)
+})
+onBeforeUnmount(() => {window.removeEventListener('hashchange',navigateHash);window.removeEventListener('resize',updateViewport);window.removeEventListener('keydown',key);window.removeEventListener('pointerdown',dismissMenu)})
 </script>
-
-<style scoped>
-.desktop {
-  width: 100vw;
-  height: 100vh;
-  position: relative;
-}
-
-.wallpaper {
-  background: url('/wallpapers/wallpapers2.png') center/cover no-repeat;
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-}
-
-.desktop-icons {
-  position: relative;
-  z-index: 1;
-}
-</style>
+<template>
+  <main :class="['desktop',desktop.wallpaper]" aria-label="Mac OS 9 portfolio desktop" @pointerdown="background">
+    <MenuBar />
+    <DesktopIcon v-for="file in desktopFiles" :key="file.id" :file="file" :position="position(file)" draggable :selected="desktop.selectionOwner === 'desktop' && desktop.selected.includes(file.id)" @select="desktop.activeId=null;select(file.id,'desktop',$event.metaKey || $event.ctrlKey || $event.shiftKey)" @open="open(file)" @move="move(file,$event)" @drop="drop(file,$event)" />
+    <aside class="welcome-note"><strong>Welcome to my Macintosh!</strong><p>Саша Шахнова<br />Web-разработчик</p><p>Open Macintosh HD to explore my experience, projects, skills, and contacts.</p><button @click="showDialog('help')">Need a hand? Mac Help ↗</button></aside>
+    <MacWindow v-for="(win,index) in desktop.windows" :key="win.id" :win="win" :index="index"><FinderWindow v-if="['folder','disk','trash'].includes(win.kind)" :win="win" /><PortfolioDocument v-else :win="win" /></MacWindow>
+    <div v-if="marquee" class="selection-marquee" :style="{left:marquee.left+'px',top:marquee.top+'px',width:marquee.width+'px',height:marquee.height+'px'}" />
+    <MacDialog v-if="desktop.dialog" />
+    <span class="sr-only" aria-live="polite">{{ desktop.selected.length }} selected. {{ desktop.windows.length }} windows open.</span>
+  </main>
+</template>
