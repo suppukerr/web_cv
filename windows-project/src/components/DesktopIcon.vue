@@ -1,6 +1,8 @@
 <script setup>
 import { ref } from 'vue'
 import MacIcon from './MacIcon.vue'
+import TablewareImage from './TablewareImage.vue'
+import { imagePaths } from '../data/tableware.js'
 import { usePointer } from '../composables/usePointer'
 const props = defineProps({ file: Object, selected: Boolean, position: Object, draggable: Boolean })
 const emit = defineEmits(['select', 'open', 'move', 'drop'])
@@ -19,9 +21,9 @@ function down(e) {
 function click(e) { if (!moved.value) emit('select', e); moved.value = false }
 </script>
 <template>
-  <button :class="['desktop-icon', { selected, positioned: position }]" :style="position ? { left: position.x + 'px', top: position.y + 'px' } : {}"
+  <button :class="['desktop-icon', { selected, positioned: position, 'tableware-file': file.kind === 'tableware-item' }]" :style="position ? { left: position.x + 'px', top: position.y + 'px' } : {}"
     :aria-label="file.name" :aria-pressed="selected" @pointerdown.stop="down" @click.stop="click"
     @dblclick.stop="emit('open')" @keydown.enter.prevent="emit('open')" @keydown.space.prevent="emit('select', $event)">
-    <MacIcon :file="file" /><span>{{ file.name }}</span>
+    <TablewareImage v-if="file.item" :path="imagePaths(file.item)[0]" thumbnail /><MacIcon v-else :file="file" /><span>{{ file.name }}</span>
   </button>
 </template>

@@ -1,5 +1,6 @@
 import { computed, reactive, watch } from 'vue'
 import { files } from '../data/files.js'
+import { filterTableware } from '../data/tableware.js'
 import { cv } from '../data/cv.js'
 import { fitRect } from './geometry.js'
 const storageKey = 'web-cv-mac9-v1'
@@ -18,7 +19,11 @@ export const allFiles = computed(() => [ ...files,
 ])
 export const activeWindow = computed(() => desktop.windows.find(w => w.id === desktop.activeId))
 export const selectedFiles = computed(() => allFiles.value.filter(f => desktop.selected.includes(f.id)))
-export function children(id) { return allFiles.value.filter(f => f.parent === id && !desktop.trash.includes(f.id)) }
+export function children(id) { return allFiles.value.filter(f => (id === 'tableware-index' ? f.kind === 'tableware-item' : f.parent === id) && !desktop.trash.includes(f.id)) }
+export function visibleChildren(win) {
+  const list = children(win.fileId)
+  return win.kind === 'collection-index' ? filterTableware(list, win.collectionFilters, win.sort, win.descending) : list
+}
 export function select(id, owner = 'desktop', additive = false) {
   if (desktop.selectionOwner !== owner || !additive) desktop.selected = []
   desktop.selectionOwner = owner
@@ -39,8 +44,8 @@ export function open(file) {
   const existing = desktop.windows.find(w => w.fileId === file.id)
   if (existing) { existing.collapsed = false; focus(existing.id); return }
   const offset = desktop.windows.length * 22 % 160
-  const rect = fitRect({ x: 30 + offset, y: 55 + offset, width: file.kind === 'pdf' ? 680 : file.kind === 'disk' ? 386 : 540, height: file.kind === 'pdf' ? 640 : file.kind === 'disk' ? 246 : 370 }, desktop.viewport)
-  const win = { id: `window-${desktop.nextId++}`, fileId: file.id, title: file.name, kind: file.kind, rect, collapsed: false, zoomRect: null, view: 'icons', sort: false }
+  const rect = fitRect({ x: 30 + offset, y: 55 + offset, width: file.tableware ? 640 : file.kind === 'pdf' ? 680 : file.kind === 'disk' ? 386 : 540, height: file.kind === 'tableware-item' ? 600 : file.tableware ? 440 : file.kind === 'pdf' ? 640 : file.kind === 'disk' ? 246 : 370 }, desktop.viewport)
+  const win = { id: `window-${desktop.nextId++}`, fileId: file.id, title: file.name, kind: file.kind, rect, collapsed: false, zoomRect: null, view: 'icons', sort: file.kind === 'collection-index' ? 'name' : false, collectionFilters: { category: '', manufacturer: '', country: '', status: '' }, descending: false }
   desktop.windows.push(win)
   desktop.activeId = win.id
   desktop.selected = []

@@ -1,4 +1,6 @@
-export const asset = path => `${import.meta.env.BASE_URL}${path}`
+import { createTablewareFiles } from './tableware.js'
+export const asset = path => `${import.meta.env?.BASE_URL || '/'}${path}`
+export const isFinderWindow = win => ['folder', 'disk', 'trash', 'collection-index'].includes(win?.kind)
 export const files = [
   { id: 'disk', name: 'Macintosh HD', kind: 'disk', parent: null },
   { id: 'about', name: 'About Me', kind: 'document', parent: 'disk' },
@@ -11,6 +13,7 @@ export const files = [
   { id: 'github', name: 'GitHub', kind: 'alias', parent: 'links', url: 'https://github.com/suppukerr' },
   { id: 'telegram', name: 'Telegram', kind: 'alias', parent: 'links', url: 'https://t.me/tchepuxa' },
   { id: 'trash', name: 'Trash', kind: 'trash', parent: null },
+  ...createTablewareFiles(),
 ]
 export function iconFor(file) {
   if (file.kind === 'folder') return asset('mac/folder.png')

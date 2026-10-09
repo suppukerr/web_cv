@@ -4,14 +4,16 @@ import MenuBar from './components/MenuBar.vue'
 import DesktopIcon from './components/DesktopIcon.vue'
 import MacWindow from './components/MacWindow.vue'
 import FinderWindow from './components/FinderWindow.vue'
+import TablewarePreview from './components/TablewarePreview.vue'
+import { isFinderWindow } from './data/files.js'
 import PortfolioDocument from './components/PortfolioDocument.vue'
 import MacDialog from './components/MacDialog.vue'
 import { usePointer } from './composables/usePointer'
-import { desktop, allFiles, activeWindow, selectedFiles, open, select, close, showDialog, updateViewport, children, moveToTrash } from './composables/useDesktop'
+import { desktop, allFiles, activeWindow, selectedFiles, open, select, close, showDialog, updateViewport, visibleChildren, moveToTrash } from './composables/useDesktop'
 const pointer = usePointer(), marquee = ref(null)
-const desktopFiles = computed(() => allFiles.value.filter(f => ['disk','resume','links','trash'].includes(f.id) || (f.custom && f.parent === null && !desktop.trash.includes(f.id))))
+const desktopFiles = computed(() => allFiles.value.filter(f => ['disk','resume','links','trash','tableware'].includes(f.id) || (f.custom && f.parent === null && !desktop.trash.includes(f.id))))
 function position(file) {
-  const fallback = file.id === 'trash' ? {x:desktop.viewport.width-92,y:desktop.viewport.height-76} : file.custom ? {x:24+(desktopFiles.value.indexOf(file)-4)*88,y:40} : {x:desktop.viewport.width-92,y:40+['disk','resume','links'].indexOf(file.id)*76}
+  const fallback = file.id === 'tableware' ? {x:24,y:330} : file.id === 'trash' ? {x:desktop.viewport.width-92,y:desktop.viewport.height-76} : file.custom ? {x:24+(desktopFiles.value.filter(f => f.custom).indexOf(file))*88,y:40} : {x:desktop.viewport.width-92,y:40+['disk','resume','links'].indexOf(file.id)*76}
   const stored = desktop.iconPositions[file.id] || fallback
   return {x:Math.max(0,Math.min(desktop.viewport.width-80,stored.x)),y:Math.max(24,Math.min(desktop.viewport.height-60,stored.y))}
 }
@@ -49,9 +51,9 @@ function key(e) {
     if(k === 'backspace') moveToTrash()
     if(k === 'a') {
       const win = activeWindow.value
-      if(win && !['folder','disk','trash'].includes(win.kind)) return
+      if(win && !isFinderWindow(win)) return
       desktop.selectionOwner = win ? win.id : 'desktop'
-      desktop.selected = (win ? win.kind === 'trash' ? allFiles.value.filter(f => desktop.trash.includes(f.id)) : children(win.fileId) : desktopFiles.value).map(f => f.id)
+      desktop.selected = (win ? win.kind === 'trash' ? allFiles.value.filter(f => desktop.trash.includes(f.id)) : visibleChildren(win) : desktopFiles.value).map(f => f.id)
     }
   } else if(e.key === 'Enter' && e.target === document.body) selectedFiles.value.forEach(open)
 }
@@ -84,7 +86,7 @@ onBeforeUnmount(() => {window.removeEventListener('hashchange',navigateHash);win
     <MenuBar />
     <DesktopIcon v-for="file in desktopFiles" :key="file.id" :file="file" :position="position(file)" draggable :selected="desktop.selectionOwner === 'desktop' && desktop.selected.includes(file.id)" @select="desktop.activeId=null;select(file.id,'desktop',$event.metaKey || $event.ctrlKey || $event.shiftKey)" @open="open(file)" @move="move(file,$event)" @drop="drop(file,$event)" />
     <aside class="welcome-note"><strong>Welcome to my Macintosh!</strong><p>Саша Шахнова<br />Web-разработчик</p><p>Open Macintosh HD to explore my experience, projects, skills, and contacts.</p><button @click="showDialog('help')">Need a hand? Mac Help ↗</button></aside>
-    <MacWindow v-for="(win,index) in desktop.windows" :key="win.id" :win="win" :index="index"><FinderWindow v-if="['folder','disk','trash'].includes(win.kind)" :win="win" /><PortfolioDocument v-else :win="win" /></MacWindow>
+    <MacWindow v-for="(win,index) in desktop.windows" :key="win.id" :win="win" :index="index"><FinderWindow v-if="isFinderWindow(win)" :win="win" /><TablewarePreview v-else-if="win.kind === 'tableware-item'" :win="win" /><PortfolioDocument v-else :win="win" /></MacWindow>
     <div v-if="marquee" class="selection-marquee" :style="{left:marquee.left+'px',top:marquee.top+'px',width:marquee.width+'px',height:marquee.height+'px'}" />
     <MacDialog v-if="desktop.dialog" />
     <span class="sr-only" aria-live="polite">{{ desktop.selected.length }} selected. {{ desktop.windows.length }} windows open.</span>

@@ -30,3 +30,38 @@
 
 .pdf-container{position:relative;display:flex;flex:1;min-height:0}
 .pdf-focus-shield{position:absolute;inset:0;z-index:1;background:transparent}
+
+/* Vintage Tableware uses the existing Platinum window and Finder controls. */
+.tableware-preview{display:flex;flex-direction:column;height:100%;min-height:0}
+.collection-path{min-height:30px;flex-wrap:wrap;gap:6px}
+.collection-location{font-size:10px;overflow-wrap:anywhere}
+.collection-controls{background:#ddd;padding:8px;border-bottom:1px solid #888;display:flex;flex-wrap:wrap;gap:8px 12px;font-size:10px;box-shadow:inset 0 1px #fff}
+.collection-controls label{display:flex;flex-direction:column;gap:3px;min-width:110px;flex:1}
+.collection-controls .platinum-select{max-width:100%;width:100%;font-size:11px}
+.collection-sort{display:flex;align-items:flex-end;gap:6px;flex:1;min-width:240px}
+.tableware-icons{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px 4px;padding:14px 8px}
+.tableware-icons .desktop-icon{max-width:140px}
+.tableware-icons .tableware-file{min-height:118px;gap:6px}
+.tableware-file.selected .tableware-photo{outline:1px solid #000;filter:brightness(.7)}
+.tableware-photo{display:flex;align-items:center;justify-content:center;width:100%;height:100%;min-height:0;background:#f4f4f4;border:1px solid #aaa;overflow:hidden}
+.tableware-photo>img{width:100%;height:100%;object-fit:contain;image-rendering:auto}
+.tableware-photo.thumbnail{width:112px;height:84px;flex:none;pointer-events:none}
+.tableware-photo.small{width:20px;height:20px}
+.tableware-photo-missing{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:#777;font-size:10px;text-align:center}
+.tableware-photo-missing img{width:32px;height:32px}
+.tableware-photo.small .tableware-photo-missing img{width:16px;height:16px}
+.tableware-file .tableware-photo-missing span{background:transparent;color:#777}
+.tableware-large-photo{height:300px;min-height:160px;background:#eee;border-bottom:1px solid #aaa;padding:12px}
+.tableware-large-photo .tableware-photo{border:0;background:#eee}
+.tableware-details{padding:16px 20px;user-select:text;line-height:1.5;overflow-wrap:anywhere;font-size:12px}
+.tableware-details h1{font-size:16px;margin-bottom:12px}
+.tableware-details dl{display:grid;grid-template-columns:100px minmax(0,1fr);gap:4px 12px;margin:0 0 14px}
+.tableware-details dt{color:#555}.tableware-details dd{margin:0}
+.tableware-details .tableware-demo-note{font-size:10px;color:#666;border-top:1px solid #ccc;margin:14px 0 0;padding-top:10px}
+.tableware-viewer-toolbar{flex-wrap:wrap}
+.collection-list{min-width:760px}
+.collection-list .list-heading,.collection-list .finder-row{grid-template-columns:minmax(230px,2fr) repeat(3,minmax(130px,1fr)) 100px}
+.collection-list .finder-row>span{padding-right:8px;overflow-wrap:anywhere}
+@media(max-width:560px){.tableware-details{padding:12px}.tableware-large-photo{height:240px}.collection-controls{gap:6px}.collection-controls label{min-width:100px}.collection-sort{flex-basis:100%}}
+
+.collection-sort label{min-width:0}

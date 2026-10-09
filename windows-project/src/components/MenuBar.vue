@@ -1,24 +1,24 @@
 <script setup>
 import { computed, ref, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
-import { asset } from '../data/files'
-import { desktop, activeWindow, allFiles, selectedFiles, open, close, focus, showDialog, moveToTrash, putAway, children } from '../composables/useDesktop'
+import { asset, isFinderWindow } from '../data/files'
+import { desktop, activeWindow, allFiles, selectedFiles, open, close, focus, showDialog, moveToTrash, putAway, visibleChildren } from '../composables/useDesktop'
 const time = ref(''), submenu = ref(null), bar = ref(null), popupOffset = ref(0), childOffset = ref(0)
 let timer, tracking = false, openedOnPress = false
 const menus = ['Apple', 'File', 'Edit', 'View', 'Special', 'Help']
-const finder = computed(() => activeWindow.value && ['folder', 'disk', 'trash'].includes(activeWindow.value.kind))
+const finder = computed(() => isFinderWindow(activeWindow.value))
 function setView(view) { if (activeWindow.value) activeWindow.value.view = view }
 function cleanup() { desktop.iconPositions = {} }
 const menuItems = computed(() => ({
   Apple: [ {label: 'About This Computer…', action: () => showDialog('about')}, {separator:true}, {label: 'Appearance…', action: () => showDialog('appearance')}, {label:'Contacts', action: () => open(allFiles.value.find(f => f.id === 'contacts'))} ],
-  File: [ {label:'New Folder…', shortcut:'⌘N', action:() => showDialog('new-folder'), disabled: activeWindow.value && (!finder.value || activeWindow.value.kind === 'trash')}, {label:'Open', shortcut:'⌘O', disabled:!selectedFiles.value.length, action:() => selectedFiles.value.forEach(open)}, {label:'Close Window', shortcut:'⌘W', disabled:!activeWindow.value, action:() => close()}, {separator:true}, {label:'Get Info', shortcut:'⌘I', disabled:!selectedFiles.value.length, action:() => showDialog('info',selectedFiles.value[0])}, {separator:true}, {label:'Move to Trash', shortcut:'⌘⌫', disabled:!selectedFiles.value.some(f => f.custom) || activeWindow.value?.kind === 'trash', action:moveToTrash}, {label:'Put Away', shortcut:'⌘Y', disabled:activeWindow.value?.kind !== 'trash' || !selectedFiles.value.length, action:putAway} ],
+  File: [ {label:'New Folder…', shortcut:'⌘N', action:() => showDialog('new-folder'), disabled: activeWindow.value && (!finder.value || ['trash', 'collection-index'].includes(activeWindow.value.kind))}, {label:'Open', shortcut:'⌘O', disabled:!selectedFiles.value.length, action:() => selectedFiles.value.forEach(open)}, {label:'Close Window', shortcut:'⌘W', disabled:!activeWindow.value, action:() => close()}, {separator:true}, {label:'Get Info', shortcut:'⌘I', disabled:!selectedFiles.value.length, action:() => showDialog('info',selectedFiles.value[0])}, {separator:true}, {label:'Move to Trash', shortcut:'⌘⌫', disabled:!selectedFiles.value.some(f => f.custom) || activeWindow.value?.kind === 'trash', action:moveToTrash}, {label:'Put Away', shortcut:'⌘Y', disabled:activeWindow.value?.kind !== 'trash' || !selectedFiles.value.length, action:putAway} ],
   Edit: [ {label:'Select All', shortcut:'⌘A', disabled:activeWindow.value && !finder.value, action:() => {
     desktop.selectionOwner = finder.value ? activeWindow.value.id : 'desktop'
-    desktop.selected = (finder.value ? (activeWindow.value.kind === 'trash' ? allFiles.value.filter(f => desktop.trash.includes(f.id)) : children(activeWindow.value.fileId)) : allFiles.value.filter(f => f.parent === null && !desktop.trash.includes(f.id))).map(f => f.id)
+    desktop.selected = (finder.value ? (activeWindow.value.kind === 'trash' ? allFiles.value.filter(f => desktop.trash.includes(f.id)) : visibleChildren(activeWindow.value)) : allFiles.value.filter(f => f.parent === null && !desktop.trash.includes(f.id))).map(f => f.id)
   }} ],
-  View: [ {label:'as Icons', checked:activeWindow.value?.view === 'icons', disabled:!finder.value, action:() => setView('icons')}, {label:'as List', checked:activeWindow.value?.view === 'list', disabled:!finder.value, action:() => setView('list')}, {separator:true}, {label:'Clean Up Desktop', action:cleanup}, {label:'Arrange', children:[{label:'by Name', disabled:!finder.value, action:() => {activeWindow.value.sort = true}}, {label:'by Kind', disabled:!finder.value, action:() => {activeWindow.value.sort = 'kind'}}]} ],
+  View: [ {label:'as Icons', checked:activeWindow.value?.view === 'icons', disabled:!finder.value, action:() => setView('icons')}, {label:'as List', checked:activeWindow.value?.view === 'list', disabled:!finder.value, action:() => setView('list')}, {separator:true}, {label:'Clean Up Desktop', action:cleanup}, {label:'Arrange', children:[{label:'by Name', disabled:!finder.value, action:() => {activeWindow.value.sort = 'name'}}, {label:'by Kind', disabled:!finder.value, action:() => {activeWindow.value.sort = 'kind'}}]} ],
   Special: [ {label:'Empty Trash…', disabled:!desktop.trash.length, action:() => showDialog('empty-trash')}, {separator:true}, {label:'Reset Desktop…', action:() => showDialog('reset')} ],
   Help: [ {label:'Mac Help', action:() => showDialog('help')}, {label:'Portfolio Source', action:() => window.open('https://github.com/suppukerr/web_cv','_blank','noopener,noreferrer')} ],
-  Applications: [{label:'Finder', checked: !activeWindow.value || finder.value, action:() => { const win = [...desktop.windows].reverse().find(w => ['folder','disk','trash'].includes(w.kind)); if(win) focus(win.id); else open(allFiles.value[0]) }}, {separator:true}, ...desktop.windows.map(w => ({label:w.title, checked:desktop.activeId === w.id, action:() => focus(w.id)}))],
+  Applications: [{label:'Finder', checked: !activeWindow.value || finder.value, action:() => { const win = [...desktop.windows].reverse().find(w => isFinderWindow(w)); if(win) focus(win.id); else open(allFiles.value[0]) }}, {separator:true}, ...desktop.windows.map(w => ({label:w.title, checked:desktop.activeId === w.id, action:() => focus(w.id)}))],
 }))
 function pressMenu(name) {
   tracking = true
@@ -100,7 +100,7 @@ onBeforeUnmount(() => {clearInterval(timer); window.removeEventListener('pointer
       </div>
     </div>
     <div class="menu-right"><time>{{ time }}</time><img class="menu-divider" :src="asset('icons/placeholder.svg')" alt="" />
-      <div class="menu-root application-menu"><button role="menuitem" aria-label="Applications" aria-haspopup="menu" :aria-expanded="desktop.menu === 'Applications'" :class="{'menu-open':desktop.menu === 'Applications'}" @pointerdown="pressMenu('Applications')" @click="rootClick('Applications')" @pointerenter="hover('Applications')"><img :src="asset('icons/finder.svg')" alt="" /><span>{{ !activeWindow || finder ? 'Finder' : activeWindow.kind === 'pdf' ? 'Acrobat Reader' : 'SimpleText' }}</span></button>
+      <div class="menu-root application-menu"><button role="menuitem" aria-label="Applications" aria-haspopup="menu" :aria-expanded="desktop.menu === 'Applications'" :class="{'menu-open':desktop.menu === 'Applications'}" @pointerdown="pressMenu('Applications')" @click="rootClick('Applications')" @pointerenter="hover('Applications')"><img :src="asset('icons/finder.svg')" alt="" /><span>{{ !activeWindow || finder ? 'Finder' : activeWindow.kind === 'pdf' ? 'Acrobat Reader' : activeWindow.kind === 'tableware-item' ? 'PictureViewer' : 'SimpleText' }}</span></button>
       <div v-if="desktop.menu === 'Applications'" role="menu" class="menu-popup"><template v-for="(item,i) in menuItems.Applications" :key="i"><hr v-if="item.separator" /><button v-else role="menuitem" :data-item="item.label" @click="execute(item)"><span class="menu-check">{{ item.checked ? '✓' : '' }}</span>{{ item.label }}</button></template></div></div>
     </div>
   </nav>

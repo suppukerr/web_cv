@@ -1,6 +1,7 @@
 import { readFile, readdir, access } from 'node:fs/promises'
 import { join, resolve } from 'node:path'
 import assert from 'node:assert/strict'
+import { tablewareItems, imagePaths } from '../src/data/tableware.js'
 const base = process.env.VITE_BASE_PATH || '/web_cv/'
 const root = resolve('dist')
 const html = await readFile(join(root,'index.html'),'utf8')
@@ -22,6 +23,9 @@ for (const path of outputs) {
 }
 for (const path of references) await access(path)
 for (const asset of ['mac/startup-reference.png','mac/Charcoal.woff2','mac/folder.png','mac/document.svg','mac/close.png','mac/zoom.png','mac/collapse.png','mac/resize.png','mac/PlatinumDialogFrame.png','mac/PlatinumButton.png','mac/PlatinumButton-Active.png','mac/PlatinumSelect.png','fonts/Geneva.ttf','icons/apple.svg','icons/finder.svg','icons/trash.svg','documents/my_resume_1.pdf','licenses/infinite-mac.txt']) await access(join(root,asset))
+for (const item of tablewareItems) {
+  for (const image of imagePaths(item)) await access(join(root, image))
+}
 const pkg=JSON.parse(await readFile('package.json','utf8'))
 assert.ok(!Object.keys({...pkg.dependencies,...pkg.devDependencies}).some(name => /^(react|react-dom|next)$/.test(name)))
 console.log(`Static build verified at ${base}: ${references.size} linked files plus all desktop runtime assets.`)
